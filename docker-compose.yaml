@@ -6,7 +6,4 @@ services:
         ports: 
             - 25565:25565
         volumes: 
-            - minecraft-data:/minecraft/world
-
-volumes:
-    minecraft-data: 
+            - /root/minecraft-data:/minecraft/world
