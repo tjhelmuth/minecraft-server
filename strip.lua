@@ -169,7 +169,7 @@ function DigAndRecurseUp(veinCount)
 end
 
 function DigAndRecurseDown(veinCount)
-    if turtle.detectDOwn() and not CheckStoneDown() then
+    if turtle.detectDown() and not CheckStoneDown() then
         turtle.digDown()
         turtle.down()
         veinCount = veinCount + 1;
