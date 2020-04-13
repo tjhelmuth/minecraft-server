@@ -6,7 +6,7 @@ TORCH_SLOT = 2
 
 VEIN_RANGE = 32
 
-KEEPERS = {"iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yellow", "uranium"}
+KEEPERS = {"iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yellow", "uranium", "tin"}
 
 -- KEEPERS = {["minecraft:iron_ore"] = true, ["minecraft:diamond_ore"] = true, ["minecraft:diamond"] = true, ["minecraft:coal_ore"] = true, ["minecraft:coal"] = true, ["minecraft:gold_ore"] = true, ["minecraft:gold"] = true}
 
@@ -40,9 +40,7 @@ function DigLine(placeTorches)
 
         if turtle.detect() then
             local isStone = CheckStone()
-            print(isStone, forward)
             if not isStone then
-                print("START DIGGING VEIN!")
                 DigVein()
             else
                 turtle.dig()
@@ -80,11 +78,21 @@ function PlaceTorch()
 end
 
 function IsKeeper(blockName)
+    print("Is keeper ? " .. blockName)
+
+    if blockName == nil then
+        return false
+    end
+
     for keeperName, nothing in pairs(KEEPERS) do
-        if blockName.find(keeperName) then
+        if blockName:find(keeperName) then
+            print("Y -- " .. keeperName)
             return true
         end
     end
+
+    print("N")
+    return false
 end
 
 -- returns true if we dont want time mine it as a vein, and false if we DO want to mine it
@@ -148,7 +156,6 @@ end
 -- We gonna dig upwards and move into it and then check whether the next block is also in the vein
 function DigAndRecurseUp(veinCount)
     if turtle.detectUp() and not CheckStoneUp() then
-        print("UP", veinCount)
         turtle.digUp()
         turtle.up()
         veinCount = veinCount + 1;
@@ -160,7 +167,6 @@ end
 -- Dig forward and then move forward if still in the vein, or back up
 function DigAndRecurse(direction, veinCount)
     if turtle.detect() and not CheckStone() then
-        print(direction, veinCount)
         turtle.dig()
         turtle.forward()
         veinCount = veinCount + 1
