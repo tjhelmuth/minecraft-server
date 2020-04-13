@@ -1,5 +1,4 @@
-MAX_RANGE = 256
-FUEL_LIMIT = 5
+MAX_RANGE = 128
 COBBLE_SLOT = 16
 
 FUEL_SLOT = 1
@@ -7,12 +6,16 @@ TORCH_SLOT = 2
 
 VEIN_RANGE = 32
 
-KEEPERS = {["minecraft:iron_ore"] = true, ["minecraft:diamond_ore"] = true, ["minecraft:diamond"] = true, ["minecraft:coal_ore"] = true, ["minecraft:coal"] = true, ["minecraft:gold_ore"] = true, ["minecraft:gold"] = true}
+KEEPERS = {"iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yellow", "uranium"}
+
+-- KEEPERS = {["minecraft:iron_ore"] = true, ["minecraft:diamond_ore"] = true, ["minecraft:diamond"] = true, ["minecraft:coal_ore"] = true, ["minecraft:coal"] = true, ["minecraft:gold_ore"] = true, ["minecraft:gold"] = true}
 
 function Run()
     DigLine()
 
     --turn around at the end and come back the way we came up 1 block
+
+    DropNonKeepers()
 
     turtle.digUp()
     turtle.up()
@@ -20,7 +23,9 @@ function Run()
     turtle.turnRight()
     turtle.turnRight()
 
-    DigLine()
+    DigLine(true)
+
+    DropNonKeepers()
 
 end
 
@@ -74,6 +79,14 @@ function PlaceTorch()
     turtle.select(prevSlot)
 end
 
+function IsKeeper(blockName)
+    for keeperName, nothing in pairs(KEEPERS) do
+        if blockName.find(keeperName) then
+            return true
+        end
+    end
+end
+
 -- returns true if we dont want time mine it as a vein, and false if we DO want to mine it
 function CheckStone()
     local success,block = turtle.inspect()
@@ -82,13 +95,7 @@ function CheckStone()
     end
 
     local name = block["name"]
-    return KEEPERS[name] == nil or not KEEPERS[name] == true
-
-    -- local prev = turtle.getSelectedSlot()
-    -- turtle.select(COBBLE_SLOT)
-    -- local isStone = turtle.compare()
-    -- turtle.select(prev)
-    -- return isStone    
+    return not IsKeeper(name)
 end
 
 function CheckStoneUp()
@@ -160,6 +167,19 @@ function DigAndRecurse(direction, veinCount)
         DigVein(veinCount)
         BackUp()
     end
+end
+
+function DropNonKeepers()
+    local originalSelection = turtle.getSelectedSlot()
+
+    for i = 1,16 do
+        turtle.select(i)
+        local blockName,count,dmg = turtle.getItemDetail()
+        if not IsKeeper(blockName) then
+            turtle.drop()
+        end
+    end
+    turtle.select(originalSelection)
 end
 
 function BackUp()
