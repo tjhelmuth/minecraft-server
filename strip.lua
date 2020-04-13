@@ -2,6 +2,9 @@ MAX_RANGE = 256
 FUEL_LIMIT = 5
 COBBLE_SLOT = 16
 
+FUEL_SLOT = 1
+TORCH_SLOT = 2
+
 VEIN_RANGE = 32
 
 KEEPERS = {["minecraft:iron_ore"] = true, ["minecraft:diamond_ore"] = true, ["minecraft:diamond"] = true, ["minecraft:coal_ore"] = true, ["minecraft:coal"] = true, ["minecraft:gold_ore"] = true, ["minecraft:gold"] = true}
@@ -21,9 +24,15 @@ function Run()
 
 end
 
-function DigLine()
+function DigLine(placeTorches)
+    placeTorches = placeTorches or false
+
     local forward = 0
     while forward < MAX_RANGE do
+        if NeedsFuel() == true then
+            Refuel()
+        end
+
         if turtle.detect() then
             local isStone = CheckStone()
             print(isStone, forward)
@@ -35,10 +44,34 @@ function DigLine()
             end
         end
         
+        if placeTorches and forward % 5 == 0 then
+            turtle.turnLeft()
+            PlaceTorch()
+            turtle.turnRight()
+        end
+
         -- move forward bruv
         turtle.forward()
         forward = forward + 1
     end
+end
+
+function NeedsFuel()
+    return turtle.getFuelLevel() == 0
+end
+
+function Refuel()
+    local prevSlot = turtle.getSelectedSlot()
+    turtle.select(FUEL_SLOT)
+    turtle.refuel(1)
+    turtle.select(prevSlot)
+end
+
+function PlaceTorch()
+    local prevSlot = turtle.getSelectedSlot()
+    turtle.select(TORCH_SLOT)
+    turtle.place()
+    turtle.select(prevSlot)
 end
 
 -- returns true if we dont want time mine it as a vein, and false if we DO want to mine it
@@ -137,5 +170,4 @@ function BackUp()
     turtle.turnRight()
 end
 
-turtle.refuel(FUEL_LIMIT)
 Run()
