@@ -85,6 +85,7 @@ function IsKeeper(blockName)
     end
 
     for keeperName, nothing in pairs(KEEPERS) do
+        print("KEEPER: " .. keeperName)
         if blockName:find(keeperName) then
             print("Y -- " .. keeperName)
             return true
@@ -182,13 +183,10 @@ function DropNonKeepers()
         turtle.select(i)
         local details = turtle.getItemDetail()
 
-        for k,v in pairs(details) do
-            print(k .. ": " .. v)
+        local blockName = details["name"]
+        if not IsKeeper(blockName) then
+            turtle.drop()
         end
-
-        -- if not IsKeeper(blockName) then
-        --     turtle.drop()
-        -- end
     end
     turtle.select(originalSelection)
 end
