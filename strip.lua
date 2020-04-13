@@ -6,9 +6,7 @@ TORCH_SLOT = 2
 
 VEIN_RANGE = 32
 
-KEEPERS = {"iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yello", "uranium", "tin", "Thermal Foundation", "ore"}
-
--- KEEPERS = {["minecraft:iron_ore"] = true, ["minecraft:diamond_ore"] = true, ["minecraft:diamond"] = true, ["minecraft:coal_ore"] = true, ["minecraft:coal"] = true, ["minecraft:gold_ore"] = true, ["minecraft:gold"] = true}
+KEEPERS = {"iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yello", "uranium", "tin", "Thermal Foundation", "ore", "torch"}
 
 function Run()
     DigLine()
@@ -48,14 +46,15 @@ function DigLine(placeTorches)
         end
         
         if placeTorches and forward % 5 == 0 then
-            turtle.turnLeft()
             PlaceTorch()
-            turtle.turnRight()
         end
 
         -- move forward bruv
-        turtle.forward()
-        forward = forward + 1
+        -- didmove can be false if there's like gravel that falls down in front of it after digging
+        local didMove = turtle.forward()
+        if didMove then 
+            forward = forward + 1
+        end
     end
 end
 
@@ -66,14 +65,14 @@ end
 function Refuel()
     local prevSlot = turtle.getSelectedSlot()
     turtle.select(FUEL_SLOT)
-    turtle.refuel(1)
+    turtle.refuel(2)
     turtle.select(prevSlot)
 end
 
 function PlaceTorch()
     local prevSlot = turtle.getSelectedSlot()
     turtle.select(TORCH_SLOT)
-    turtle.place()
+    turtle.placeDown()
     turtle.select(prevSlot)
 end
 
@@ -114,13 +113,18 @@ function CheckStoneUp()
     end
 
     local name = block["name"]
-    return KEEPERS[name] == nil or not KEEPERS[name] == true
-    -- local prev = turtle.getSelectedSlot()
-    -- turtle.select(COBBLE_SLOT)
-    -- local isStone = turtle.compareUp()
-    -- turtle.select(prev)
-    -- return isStone
-end    
+    return not IsKeeper(name)
+end
+
+function CheckStoneDown()
+    local success,block = turtle.inspectDown()
+    if not success then
+        return true
+    end
+
+    local name = block["name"]
+    return not IsKeeper(name)
+end
 
 function DigVein(veinCount)
     veinCount = veinCount or 0
@@ -147,9 +151,8 @@ function DigVein(veinCount)
     turtle.turnRight()
     --DFS LEFT END
     
-    --DFS UP START
     DigAndRecurseUp(veinCount)
-    --DFS DOWN START
+    DigAndRecurseDown(veinCount)
     
     -- AT THIS POINT WE SHOULD BE BACK IN THE ORIGINAL PLACE FACING THE ORIGINAL DIRECTION :)
 end
@@ -162,6 +165,16 @@ function DigAndRecurseUp(veinCount)
         veinCount = veinCount + 1;
         DigVein(veinCount)
         turtle.down()
+    end
+end
+
+function DigAndRecurseDown(veinCount)
+    if turtle.detectDOwn() and not CheckStoneDown() then
+        turtle.digDown()
+        turtle.down()
+        veinCount = veinCount + 1;
+        DigVein(veinCount)
+        turtle.up()
     end
 end
 
