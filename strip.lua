@@ -6,7 +6,7 @@ TORCH_SLOT = 2
 
 VEIN_RANGE = 32
 
-KEEPERS = {"iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yellow", "uranium", "tin"}
+KEEPERS = {"iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yello", "uranium", "tin"}
 
 -- KEEPERS = {["minecraft:iron_ore"] = true, ["minecraft:diamond_ore"] = true, ["minecraft:diamond"] = true, ["minecraft:coal_ore"] = true, ["minecraft:coal"] = true, ["minecraft:gold_ore"] = true, ["minecraft:gold"] = true}
 
@@ -180,10 +180,15 @@ function DropNonKeepers()
 
     for i = 1,16 do
         turtle.select(i)
-        local blockName,count,dmg = turtle.getItemDetail()
-        if not IsKeeper(blockName) then
-            turtle.drop()
+        local details = turtle.getItemDetail()
+
+        for k,v in pairs(details) do
+            print(k .. ": " .. v)
         end
+
+        -- if not IsKeeper(blockName) then
+        --     turtle.drop()
+        -- end
     end
     turtle.select(originalSelection)
 end
