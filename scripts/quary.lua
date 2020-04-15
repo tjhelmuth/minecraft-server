@@ -50,17 +50,25 @@ function DigLine(length, height)
     end
 
     --we need to come down
-    if up then
+    if up and height > 1 then
         mining.MoveDown(height - 1)
     end
+
+    turtle.turnRight()
+    turtle.turnRight()
+    mining.DropNonKeepers()
+    turtle.turnRight()
+    turtle.turnRight()
 end
 
 -- dig out a block to height. If up is true, we dig forward and then height - 1 up if it's down we dig forward and then height - 1 down
 function DigSpot(height, up)
     mining.MoveForward()
 
-    local moveFn = up and mining.MoveUp or mining.MoveDown
-    moveFn(height - 1)
+    if height > 1 then
+        local moveFn = up and mining.MoveUp or mining.MoveDown
+        moveFn(height - 1)
+    end
 end
 
 function Run()
