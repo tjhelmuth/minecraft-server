@@ -72,8 +72,8 @@ function DigSpot(height, up)
 end
 
 function Run()
-    local length = args[1]
-    local height = args[2]
+    local length = tonumber(args[1])
+    local height = tonumber(args[2])
 
     Log("Kicking off quary with length = " .. length .. " and height = " .. height)
     turtle.turnRight()
