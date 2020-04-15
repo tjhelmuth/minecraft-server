@@ -8,6 +8,14 @@ VEIN_RANGE = 32
 
 KEEPERS = {"iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yello", "uranium", "tin", "Thermal Foundation", "ore", "torch"}
 
+LOG_FILE = fs.open("log", "w")
+
+
+function Log(text)
+    LOG_FILE.writeLine(text)
+end
+
+
 function Run()
     DigLine()
 
@@ -25,6 +33,7 @@ function Run()
 
     DropNonKeepers()
 
+    LOG_FILE.close()
 end
 
 function DigLine(placeTorches)
@@ -32,6 +41,8 @@ function DigLine(placeTorches)
 
     local forward = 0
     while forward < MAX_RANGE do
+        Log("I: " .. forward)
+        
         RefuelIfNeeded()
 
         if turtle.detect() then
@@ -53,7 +64,8 @@ function DigLine(placeTorches)
 end
 
 function NeedsFuel()
-    return turtle.getFuelLevel() == 0
+    Log("Need Fuel? Have " .. turtle.getFuelLevel())
+    return turtle.getFuelLevel() < 80
 end
 
 function RefuelIfNeeded()
@@ -63,9 +75,10 @@ function RefuelIfNeeded()
 end
 
 function Refuel()
+    Log("Refueling")
     local prevSlot = turtle.getSelectedSlot()
     turtle.select(FUEL_SLOT)
-    turtle.refuel(2)
+    turtle.refuel(3)
     turtle.select(prevSlot)
 end
 
@@ -126,8 +139,9 @@ function CheckStoneDown()
 end
 
 function DigVein(veinCount)
+    Log(GetSpacing(veinCount) .. "VEIN {")
     RefuelIfNeeded()
-    
+
     veinCount = veinCount or 0
 
     if veinCount > VEIN_RANGE then
@@ -155,12 +169,14 @@ function DigVein(veinCount)
     DigAndRecurseUp(veinCount)
     DigAndRecurseDown(veinCount)
     
+    Log(GetSpacing(veinCount) .. "}")
     -- AT THIS POINT WE SHOULD BE BACK IN THE ORIGINAL PLACE FACING THE ORIGINAL DIRECTION :)
 end
 
 -- We gonna dig upwards and move into it and then check whether the next block is also in the vein
 function DigAndRecurseUp(veinCount)
     if turtle.detectUp() and not CheckStoneUp() then
+        Log(GetSpacing(veinCount) .. "Up")
         turtle.digUp()
         MoveUp()
         veinCount = veinCount + 1;
@@ -171,6 +187,7 @@ end
 
 function DigAndRecurseDown(veinCount)
     if turtle.detectDown() and not CheckStoneDown() then
+        Log(GetSpacing(veinCount) .. "Down")
         turtle.digDown()
         MoveDown()
         veinCount = veinCount + 1;
@@ -182,12 +199,22 @@ end
 -- Dig forward and then move forward if still in the vein, or back up
 function DigAndRecurse(direction, veinCount)
     if turtle.detect() and not CheckStone() then
+        Log(GetSpacing(veinCount) .. direction)
         turtle.dig()
         MoveForward()
         veinCount = veinCount + 1
         DigVein(veinCount)
         BackUp()
     end
+end
+
+function GetSpacing(veinCount)
+    local indent = veinCount * 2
+    local spacing = ""
+    for i = 1,indent do
+        spacing = spacing + " "
+    end
+    return spacing;
 end
 
 function DropNonKeepers()
