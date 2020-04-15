@@ -1,0 +1,29 @@
+function MoveForward()
+    local moved = false
+    while not moved do
+        if turtle.detect() then
+            turtle.dig()
+        end
+        moved = turtle.forward()
+    end
+end
+
+function MoveUp()
+    local moved = false
+    while not moved do
+        if turtle.detectUp() then
+            turtle.digUp()
+        end
+        moved = turtle.up()
+    end
+end
+
+function MoveDown()
+    local moved = false
+    while not moved do
+        if turtle.detectDown() then
+            turtle.digDown()
+        end
+        moved = turtle.down()
+    end
+end

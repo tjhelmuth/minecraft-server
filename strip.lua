@@ -139,10 +139,11 @@ function CheckStoneDown()
 end
 
 function DigVein(veinCount)
-    Log(GetSpacing(veinCount) .. "VEIN {")
     RefuelIfNeeded()
-
+    
     veinCount = veinCount or 0
+
+    Log(GetSpacing(veinCount) .. "VEIN {")
 
     if veinCount > VEIN_RANGE then
         return
@@ -209,10 +210,14 @@ function DigAndRecurse(direction, veinCount)
 end
 
 function GetSpacing(veinCount)
+    if veinCount == nil then
+        return ""
+    end
+
     local indent = veinCount * 2
     local spacing = ""
     for i = 1,indent do
-        spacing = spacing + " "
+        spacing = spacing .. " "
     end
     return spacing;
 end
