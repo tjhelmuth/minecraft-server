@@ -32,9 +32,7 @@ function DigLine(placeTorches)
 
     local forward = 0
     while forward < MAX_RANGE do
-        if NeedsFuel() == true then
-            Refuel()
-        end
+        RefuelIfNeeded()
 
         if turtle.detect() then
             local isStone = CheckStone()
@@ -56,6 +54,12 @@ end
 
 function NeedsFuel()
     return turtle.getFuelLevel() == 0
+end
+
+function RefuelIfNeeded()
+    if NeedsFuel() then
+        Refuel()
+    end
 end
 
 function Refuel()
@@ -122,6 +126,8 @@ function CheckStoneDown()
 end
 
 function DigVein(veinCount)
+    RefuelIfNeeded()
+    
     veinCount = veinCount or 0
 
     if veinCount > VEIN_RANGE then
