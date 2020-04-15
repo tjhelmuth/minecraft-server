@@ -16,7 +16,7 @@ function Run()
     DropNonKeepers()
 
     turtle.digUp()
-    turtle.up()
+    MoveUp()
 
     turtle.turnRight()
     turtle.turnRight()
@@ -51,7 +51,7 @@ function DigLine(placeTorches)
 
         -- move forward bruv
         -- didmove can be false if there's like gravel that falls down in front of it after digging
-        local didMove = turtle.forward()
+        local didMove = MoveForward()
         if didMove then 
             forward = forward + 1
         end
@@ -161,20 +161,20 @@ end
 function DigAndRecurseUp(veinCount)
     if turtle.detectUp() and not CheckStoneUp() then
         turtle.digUp()
-        turtle.up()
+        MoveUp()
         veinCount = veinCount + 1;
         DigVein(veinCount)
-        turtle.down()
+        MoveDown()
     end
 end
 
 function DigAndRecurseDown(veinCount)
     if turtle.detectDown() and not CheckStoneDown() then
         turtle.digDown()
-        turtle.down()
+        MoveDown()
         veinCount = veinCount + 1;
         DigVein(veinCount)
-        turtle.up()
+        MoveUp()
     end
 end
 
@@ -182,7 +182,7 @@ end
 function DigAndRecurse(direction, veinCount)
     if turtle.detect() and not CheckStone() then
         turtle.dig()
-        turtle.forward()
+        MoveForward()
         veinCount = veinCount + 1
         DigVein(veinCount)
         BackUp()
@@ -207,9 +207,40 @@ end
 function BackUp()
     turtle.turnRight()
     turtle.turnRight()
-    turtle.forward()
+    MoveForward()
     turtle.turnRight()
     turtle.turnRight()
 end
+
+function MoveForward()
+    local moved = false
+    while not moved do
+        if turtle.detect() then
+            turtle.dig()
+        end
+        moved = turtle.forward()
+    end
+end
+
+function MoveUp()
+    local moved = false
+    while not moved do
+        if turtle.detectUp() then
+            turtle.digUp()
+        end
+        moved = turtle.up()
+    end
+end
+
+function MoveDown()
+    local moved = false
+    while not moved do
+        if turtle.detectDown() then
+            turtle.digDown()
+        end
+        moved = turtle.down()
+    end
+end
+
 
 Run()
