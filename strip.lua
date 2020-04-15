@@ -49,12 +49,8 @@ function DigLine(placeTorches)
             PlaceTorch()
         end
 
-        -- move forward bruv
-        -- didmove can be false if there's like gravel that falls down in front of it after digging
-        local didMove = MoveForward()
-        if didMove then 
-            forward = forward + 1
-        end
+        MoveForward()
+        forward = forward + 1
     end
 end
 
@@ -84,7 +80,6 @@ function IsKeeper(blockName)
     end
 
     for i, keeperName in pairs(KEEPERS) do
-        print("KEEPER: " .. keeperName)
         if blockName:find(keeperName) then
             print("Y -- " .. keeperName)
             return true
