@@ -1,6 +1,6 @@
 FUEL_SLOT = 1
 
-KEEPERS = {"iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yello", "uranium", "tin", "Thermal Foundation", "ore", "torch"}
+KEEPERS = {"ThermalFoundation:Ore", "thermalfoundation:ore","iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yello", "uranium", "tin","lapiz", "Thermal Foundation", "ore", "torch", "uranium", "Silver"}
 
 function IsKeeper(blockName)
     print("Is keeper ? " .. blockName)
