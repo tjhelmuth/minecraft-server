@@ -10,7 +10,6 @@ KEEPERS = {"iron", "diamond", "coal", "copper", "silver", "gold", "ruby", "yello
 
 LOG_FILE = fs.open("log", "w")
 
-
 function Log(text)
     LOG_FILE.writeLine(text)
 end
