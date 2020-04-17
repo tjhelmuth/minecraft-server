@@ -1,7 +1,7 @@
 FUEL_SLOT = 1
 
 KEEPERS = {
-    "dye"
+    "dye",
     "ThermalFoundation:Ore", 
     "thermalfoundation:ore",
     "iron", 
