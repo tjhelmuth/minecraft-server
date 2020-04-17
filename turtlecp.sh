@@ -11,9 +11,9 @@ for filename in scripts/*; do
     basename=$(basename "$basename")
     echo "basename: ${basename}"
     for turtle in $MINECRAFT_DATA/computer/*/; do
-        path="${turtle}/${basename}"
+        path="${turtle}${basename}"
         echo "path: ${path}"
-        cp "$basename $path"
+        cp $filename $path
         chmod 777 $path
     done
 done
