@@ -5,8 +5,8 @@ git pull
 
 cd ~/minecraft-server
 
-for filename in /scripts; do
-    echo $filename
+for filename in scripts/*; do
+    echo "$filename"
     basename=$(echo "$filename" | cut -f 1 -d '.')
     echo "basename: ${basename}"
     for turtle in $MINECRAFT_DATA/computer/*/; do
