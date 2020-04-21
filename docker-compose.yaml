@@ -32,3 +32,5 @@ services:
 volumes:
     skyblock:
         external: true
+    rlcraft:
+        external: true
