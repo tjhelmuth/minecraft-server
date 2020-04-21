@@ -1,9 +1,23 @@
 version: "3.7"
 services: 
-    minecraft: 
-        image: jonasbonno/ftb-infinity:3.1.0
+    # minecraft: 
+    #     image: jonasbonno/ftb-infinity:3.1.0
+    #     container_name: minecraft
+    #     ports: 
+    #         - 25565:25565
+    #     volumes: 
+    #         - /root/minecraft-data:/minecraft/world
+
+    skyblock: 
+        image: cochief/skyfactory4
         container_name: minecraft
+        tty: true
+        stdin_open: true
         ports: 
             - 25565:25565
         volumes: 
-            - /root/minecraft-data:/minecraft/world
+            - skyblock:/minecraft/world
+
+volumes:
+    skyblock:
+        external: true
