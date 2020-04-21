@@ -10,13 +10,24 @@ services:
 
     skyblock: 
         image: cochief/skyfactory4
-        container_name: minecraft
+        container_name: skyfactory
+        tty: true
+        stdin_open: true
+        ports: 
+            - 25566:25565
+        volumes: 
+            - skyblock:/minecraft/world
+
+    
+    rlcraft: 
+        image: cochief/skyfactory4
+        container_name: rlcraft
         tty: true
         stdin_open: true
         ports: 
             - 25565:25565
         volumes: 
-            - skyblock:/minecraft/world
+            - rlcraft:/server/world
 
 volumes:
     skyblock:
